@@ -9,6 +9,7 @@
   "author": "Juan Rondon",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^2.2.26"
+    "mongodb": "^2.2.26",
+    "mongoose": "^4.10.0"
   }
 }
