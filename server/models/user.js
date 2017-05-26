@@ -48,6 +48,18 @@ UserSchema.methods.generateAuthToken = function () {
     });
 };
 
+UserSchema.methods.removeToken = function (tokenToRemove) {
+    var user = this;
+    return user.update({
+        $pull: {
+            tokens: {
+                token: tokenToRemove
+            }
+        }
+    });
+
+};
+
 UserSchema.pre('save', function (next) {
     var user = this;
     if (user.isModified('password')) {
@@ -86,7 +98,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
             return Promise.reject();
         }
         return new Promise((resolve, reject) => {
-            bcrypt.compare(password, user.password, (error, result) => {                
+            bcrypt.compare(password, user.password, (error, result) => {
                 if (result) {
                     resolve(user);
                 }
@@ -97,6 +109,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
         });
     });
 };
+
 
 UserSchema.methods.toJSON = function () {
     var user = this;
