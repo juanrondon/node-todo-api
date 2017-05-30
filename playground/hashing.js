@@ -9,7 +9,7 @@ var password = '123abc!';
 
 var hashedPwd = '$2a$10$We9pJqQqnhlJiQ0.EmQHLuYKYtV.69m7QwHENqK/7GkVJlmCUPrFa';
 bcrypt.compare(password, hashedPwd, (error, result) => {
-    console.log(result);
+  console.log(result);
 })
 
 // const { SHA256 } = require('crypto-js');
