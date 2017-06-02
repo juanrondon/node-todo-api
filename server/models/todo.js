@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
-const Todo = mongoose.model('Todo', {
+var Todo = mongoose.model('Todo', {
   text: {
     type: String,
     required: true,
-    minLenght: 1,
+    minlength: 1,
     trim: true
   },
   completed: {
@@ -21,6 +21,4 @@ const Todo = mongoose.model('Todo', {
   }
 });
 
-module.exports = {
-  Todo
-};
+module.exports = {Todo};

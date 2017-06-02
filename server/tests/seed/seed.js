@@ -1,45 +1,35 @@
-const { Todo } = require('./../../models/todo');
-const { User } = require('./../../models/user');
-const { ObjectId } = require('mongodb');
+const {ObjectID} = require('mongodb');
 const jwt = require('jsonwebtoken');
 
-const userOneId = new ObjectId();
-const userTwoId = new ObjectId();
+const {Todo} = require('./../../models/todo');
+const {User} = require('./../../models/user');
+
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
 const users = [{
   _id: userOneId,
-  email: 'user1@mail.com',
-  password: 'user1Pass',
+  email: 'andrew@example.com',
+  password: 'userOnePass',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: userOneId, access: 'auth' }, 'abc123').toString()
+    token: jwt.sign({_id: userOneId, access: 'auth'}, process.env.JWT_SECRET).toString()
   }]
 }, {
   _id: userTwoId,
-  email: 'user2@mail.com',
-  password: 'user2Pass',
+  email: 'jen@example.com',
+  password: 'userTwoPass',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: userTwoId, access: 'auth' }, 'abc123').toString()
+    token: jwt.sign({_id: userTwoId, access: 'auth'}, process.env.JWT_SECRET).toString()
   }]
 }];
 
-const populateUsers = (done) => {
-  User.remove({}).then(() => {
-    var userOne = new User(users[0]).save();
-    var userTwo = new User(users[1]).save();
-    // waits for user 1 and 2 to be saved
-    return Promise.all([userOne, userTwo]);
-  }).then(() => {
-    done();
-  });
-};
-
 const todos = [{
-  _id: new ObjectId(),
+  _id: new ObjectID(),
   text: 'First test todo',
   _creator: userOneId
 }, {
-  _id: new ObjectId(),
+  _id: new ObjectID(),
   text: 'Second test todo',
   completed: true,
   completedAt: 333,
@@ -49,14 +39,16 @@ const todos = [{
 const populateTodos = (done) => {
   Todo.remove({}).then(() => {
     return Todo.insertMany(todos);
-  }).then(() => {
-    done();
-  });
+  }).then(() => done());
 };
 
-module.exports = {
-  todos,
-  populateTodos,
-  populateUsers,
-  users
+const populateUsers = (done) => {
+  User.remove({}).then(() => {
+    var userOne = new User(users[0]).save();
+    var userTwo = new User(users[1]).save();
+
+    return Promise.all([userOne, userTwo])
+  }).then(() => done());
 };
+
+module.exports = {todos, populateTodos, users, populateUsers};
